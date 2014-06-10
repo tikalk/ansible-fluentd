@@ -1,0 +1,27 @@
+<source>
+ type tail_multiline
+ path /var/log/td-agent/td-agent.log 
+ tag ncos
+ format /^(?<time>\d{1,2}:\d{1,2}:\d{1,2}\.\d{3}) \[(?<method>.*)\] (?<errlevel>[A-Z]+)\s+(?<class>[^ ]*) - (?<message>.*)$/
+ time_format %H:%M:%S.%L
+ pos_file /var/tmp/fluentd.pos
+ read_newfile_from_head true
+</source>
+<match **>
+ type forward
+ send_timeout 60s
+ recover_wait 10s
+ heartbeat_interval 1s
+ phi_threshold 8
+ hard_timeout 60s
+ <server>
+   name log-analyzer
+   host {{server_url}}
+   port 24224
+   weight 60
+ </server>
+ <secondary>
+   type file
+   path /var/log/td-agent/forward-failed
+ </secondary>
+</match>

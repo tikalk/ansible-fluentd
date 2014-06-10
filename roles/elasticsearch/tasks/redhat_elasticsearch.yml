@@ -1,0 +1,14 @@
+---
+- name: install jdk
+  yum: name=java-1.7.0-openjdk state=latest
+
+- name: Add rpm repository
+  copy: src=es.repo dest=/etc/yum.repos.d/es.repo
+
+- name: yum install elasticsearch 
+  yum: name=elasticsearch state=latest
+  notify:
+    - restart elasticsearch
+
+
+

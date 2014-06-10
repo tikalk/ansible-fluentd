@@ -1,0 +1,17 @@
+#- hosts: local
+#  roles:
+#    - vm
+- hosts: server
+  roles:
+    #- selinux
+    - httpd
+    - elasticsearch
+    - kibana
+    - td-agent
+  vars:
+    server: true
+- hosts: agent
+  roles:
+    #- selinux
+    - td-agent
+

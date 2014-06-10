@@ -1,0 +1,23 @@
+---
+
+- name: Check td_agent_architecture is defined if os is Debian
+  fail: msg="define 'td_agent_architecture', i386 or amd64.\nDetail for http://docs.fluentd.org/articles/install-by-deb"
+  when: ansible_distribution == "Debian" and ansible_distribution_version[0] == '6' and td_agent_architecture not in ['i386', 'amd64']
+
+- include: redhat_td-agent.yml
+  when: ansible_os_family == "RedHat"
+
+- include: ubuntu_td-agent.yml
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_version in ['10.04', '12.04']
+
+- include: debian_td-agent.yml
+  when: ansible_distribution == "Debian" and ansible_distribution_version[0] == '6'
+
+- name: user 'td-agent' to ncos group, so it will have permissions to read ncos logs
+  user: name=td-agent append=yes group={{security_group}}
+  when: server is not defined
+
+- name: Configure {{server_type}}.conf
+  template: src={{server_type}}.conf dest=/etc/td-agent/td-agent.conf
+  notify:
+      - restart td-agent

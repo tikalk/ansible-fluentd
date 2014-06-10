@@ -1,0 +1,22 @@
+---
+- name: Download EPEL Repo
+  get_url: url=http://mirror-fpt-telecom.fpt.net/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm dest=/tmp/epel-release-6-8.noarch.rpm
+  when: server is defined
+- name: Install EPEL Repo
+  command: rpm -ivh /tmp/epel-release-6-8.noarch.rpm creates=/etc/yum.repos.d/epel.repo
+  when: server is defined
+
+- name: install from rpm repository
+  yum: name=ftp://rpmfind.net/linux/centos/6.5/os/x86_64/Packages/libselinux-python-2.0.94-5.3.el6_4.1.x86_64.rpm state=present
+  when: server is defined
+
+- name: install rocks repository
+  copy: src=rocks.repo dest=/etc/yum.repos.d/rocks.repo
+  when: server is defined
+
+
+- name: Install libselinux-python
+  yum: name=libselinux-python
+
+
+

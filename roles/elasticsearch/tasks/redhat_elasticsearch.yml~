@@ -1,0 +1,14 @@
+---
+- name: install jdk
+  command: curl -LO "http://download.oracle.com/otn-pub/java/jdk/7u51-b13/jdk-7u51-linux-x64.rpm" -H "Cookie: oraclelicense=accept-securebackup-cookie" && rpm -i jdk-7u51-linux-x64.rpm
+
+- name: Add rpm repository
+  copy: src=es.repo dest=/etc/yum.repos.d/es.repo
+
+- name: yum install elasticsearch 
+  yum: name=elasticsearch state=latest
+  notify:
+    - restart elasticsearch
+
+
+

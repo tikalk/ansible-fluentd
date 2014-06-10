@@ -1,0 +1,8 @@
+    - name: install wget
+      yum: name=wget state=latest
+
+    - name: download kibana 
+      shell: wget https://download.elasticsearch.org/kibana/kibana/kibana-{{kibana_version}}.tar.gz -P /tmp
+
+    - name: unarcive kibana 
+      command: tar -zxf /tmp/kibana-{{kibana_version}}.tar.gz -C /var/www/html/

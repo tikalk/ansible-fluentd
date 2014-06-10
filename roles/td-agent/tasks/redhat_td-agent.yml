@@ -1,0 +1,27 @@
+---
+
+- name: install the latest version of Apache
+  yum: name=httpd state=latest
+
+- name: Add rpm repository
+  copy: src=td.repo dest=/etc/yum.repos.d/td.repo
+
+- name: yum curl-devel for gem 
+  yum: name=curl-devel state=latest
+
+- name: yum install td-agent
+  yum: name=td-agent state=latest
+  notify:
+    - restart td-agent
+
+- name: install fluent-plugin-tail-multiline 
+  command: /usr/lib64/fluent/ruby/bin/fluent-gem install fluent-plugin-tail-multiline
+  notify:
+    - restart td-agent
+  when: server is not defined
+- name: Install Elasticsearch plugin for Fluentd
+  command: /usr/lib64/fluent/ruby/bin/fluent-gem install fluent-plugin-elasticsearch
+  notify:
+    - restart td-agent
+  when: server is defined
+
